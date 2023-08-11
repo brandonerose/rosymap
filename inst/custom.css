@@ -1,0 +1,37 @@
+.sticky_footer {
+  position:fixed;
+  bottom:0;
+  right:0;
+  left:0;
+  background: #000000;
+  z-index: 1000;
+  opacity: 1;
+  text-align: center;
+}
+
+
+.sidebar-menu, p,.small-box h3,h1 small,h1 .small,h2 small,h2 .small,h3 small,h3 .small,h4 small,h4 .small,h5 small,h5 .small,h6 small,h6 .small,.h1 small,.h1 .small,.h2 small,.h2 .small,.h3 small,.h3 .small,.h4 small,.h4 .small,.h5 small,.h5 .small,.h6 small,.h6 .small,h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  color: #000000;
+}
+
+.skin-black .sidebar-menu>li.active>a {
+  color: #000;
+  background: #00c0ef;
+}
+
+.skin-black .sidebar a, a {
+  color: #551A8B
+}
+
+
+.control-sidebar-menu>li>a:hover, .sidebar a{
+   color: #000;
+}
+
+.skin-black .left-side, .skin-black .main-sidebar, .skin-black .wrapper, .control-sidebar-dark, .control-sidebar-dark+.control-sidebar-bg{
+  background-color: #e8e6e6;
+}
+
+.btn-default {
+     color: #000;
+}

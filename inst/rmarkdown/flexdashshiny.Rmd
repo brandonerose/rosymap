@@ -1,0 +1,111 @@
+---
+title: "PSDB"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: https://www.thecodingdocs.com
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library("shiny")
+
+library("flexdashboard")
+# Access to CRAN packages data stream
+# source("package_stream.R")
+
+```
+
+Sidebar {.sidebar}
+=======================================================================
+
+### cran.rstudio.com
+
+```{r}
+
+fluidRow(
+  column(
+    12,
+    actionButton("ab_update_redcap","Update REDCap!"),
+    align="center")
+)
+fluidRow(
+  column(
+    12,
+    actionButton("ab_choose_angio","Choose Angiosarcoma!"),
+    actionButton("ab_choose_gist","Choose GIST!"),
+    actionButton("ab_choose_ewing","Choose Ewings!"),
+    actionButton("ab_clear_group","Clear Group!"),
+    align="center")
+)
+
+fluidRow(
+  column(
+    12,
+    actionButton("ab_random_record_group","Random Record From Group!"),
+    actionButton("ab_random_record","Random Record!"),
+    align="center")
+)
+uiOutput("redcap_links")
+
+```
+
+
+Dashboard
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Downloads per sec (last 5 min) {.value-box}
+
+```{r}
+  output$vb1<-flexdashboard::renderValueBox({
+    flexdashboard::valueBox(
+      value = 14,
+      caption = "Selected Group"
+    )
+  })
+flexdashboard::valueBoxOutput("vb1")
+```
+
+### Total downloads {.value-box}
+
+```{r}
+
+
+```
+
+### Unique users {.value-box}
+
+```{r}
+
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Popularity by package (last 5 min) {data-width=700}
+
+```{r}
+
+
+```
+
+### Percent of downloads (last 5 min) {data-width=340}
+
+```{r}
+
+
+```
+
+Recent Downloads
+=======================================================================
+
+### Recent Downlads
+
+```{r}
+
+
+```

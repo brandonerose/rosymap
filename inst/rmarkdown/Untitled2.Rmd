@@ -1,0 +1,45 @@
+---
+title: "Example"
+output: html_document
+---
+
+
+
+```{r create_temp_rmd_files, echo=FALSE}
+
+dir.create(path = "temp_rmd",showWarnings = F)
+
+temp_rmd_list <- list()
+
+for (RECORD in records) {
+
+  temp_rmd_path <- paste0("temp_rmd/", RECORD, ".rmd")
+  temp_rmd_list[[RECORD]] <- temp_rmd_path
+
+  sink(file = temp_rmd_path)
+  cat("  \n",
+        "### ", "[",RECORD,"](",paste0(redcap_link,"redcap_v",DB$version,"/DataEntry/record_home.php?pid=",DB$PID,"&arm=1&id=",RECORD)," \"",RECORD,"\")"," | MRN: ",DB$data$patient$ummg_mrn[which(DB$data$patient$record_id==RECORD)], " | ",DB$data$patient$last_name[which(DB$data$patient$record_id==RECORD)], "  \n",
+        "```{r, echo=FALSE}", "  \n",
+        'DB %>% make_timeline(RECORD)',
+        "  \n",
+        "```",
+      "  \n",
+      sep = "")
+  sink()
+}
+```
+
+```{r knit_temp_rmd_files, echo=FALSE, results='asis'}
+
+for (RECORD in records) {
+
+  # Knit the temporary RMD file
+  cat(knitr::knit_child(temp_rmd_list[[RECORD]],
+                        quiet = TRUE))
+
+  # Delete the temporary RMD file
+  file.remove(temp_rmd_list[[RECORD]])
+}
+
+```
+
