@@ -11,8 +11,14 @@ dbSidebar<-function(){
         text="Home",
         tabName = "home",
         icon =shiny::icon("home")
+      ),
+      menuItem(
+        text="Upload",
+        tabName = "upload",
+        icon =shiny::icon("upload")
       )
     ),
+    actionButton("use_sample_data", "Use Sample Data"),
     numericInput(
       inputId = "kclusters",
       label = "K clusters",
@@ -41,6 +47,7 @@ dbSidebar<-function(){
     ),
     actionButton("random_colors", "Random Colors"),
     actionButton("default_colors", "Default Colors"),
+    actionButton("save_your_work", "Save Your Work!"),
     TCD_SBF()
   )
 }
