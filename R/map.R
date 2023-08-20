@@ -21,7 +21,7 @@ run_kmeans <- function(DB,k){
   if(is.null(DB$data$coordinates))stop("is.null(DB$data$coordinates)")
   if(is.null(DB$map))stop("is.null(DB$map)")
   x <- DB$data$coordinates
-  y <- DB$data$coordinates %>% dplyr::filter(group=="PT")
+  y <- DB$data$coordinates[which(DB$data$coordinates$group=="PT"),]
   DB$other$kmeans <- stats::kmeans(as.matrix(y %>% dplyr::select(latitude,longitude)), centers = k)
   y$group <- paste0("Cluster - ", DB$other$kmeans$cluster)
   y$size <- 1
