@@ -1,6 +1,6 @@
 Package: rosymap
 Title: rosymap
-Version: 0.0.0.9006
+Version: 0.0.0.9007
 Authors@R: 
     person("Brandon", "Rose", , "thecodingdocs@gmail.com", role = c("cre", "aut"))
 Description: R Shiny package for using coordinates to plan effective
