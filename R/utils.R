@@ -104,3 +104,33 @@ percent <- function(x){
 sample1 <- function(x){
   sample(x,1)
 }
+
+make_table<-function(DF,selection="single"){
+  # %>% DT::formatStyle(
+  #   colnames(DF),
+  #   color = "#000"
+  # )
+  DF %>% DT::datatable(
+    selection = selection,
+    editable = F,
+    rownames = F,
+    options = list(
+      columnDefs = list(list(className = 'dt-center',targets = "_all")),
+      paging = T,
+      pageLength = 50,
+      fixedColumns = TRUE,
+      ordering = TRUE,
+      scrollY = "300px",
+      scrollX = T,
+      # autoWidth = T,
+      searching = T,
+      # dom = 'Bfrtip',
+      # buttons = c('csv', 'excel',"pdf"),
+      scrollCollapse = F,
+      stateSave = F
+    ),
+    class = "cell-border",
+    filter = 'top',
+    escape =F
+  )
+}
