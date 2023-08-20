@@ -72,10 +72,14 @@ save_DB<-function(DB){
 #' @param DB list for the package that contains applications and reference files
 #' @return DB tables in your environment
 #' @export
-show_DB<-function(DB){
-  validate_DB(DB)
+show_DB <- function(DB){
+  DB <- validate_DB(DB)
+  data_list <- list()
   for(NAME in names(DB$data)){
-    assign(NAME,DB$data[[NAME]],pos = 1)
+    L <- list(DB$data[[NAME]])
+    names(L) <- NAME
+    data_list <- data_list %>% append(L)
   }
+  data_list %>% list2env(envir = .GlobalEnv)
 }
 
