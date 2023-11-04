@@ -263,7 +263,7 @@ k_means_plot <- function(DB){
     ggplot2::scale_shape_manual(
       name = "Group",
       # labels = c("Event", "Intervention","K-Mean Center"),
-      values = c(3,4,8,15:25) %>% sample(3)
+      values = c(16,17,3)
     ) +
     ggplot2::guides(color = FALSE, linetype = FALSE,size= FALSE) +
     ggplot2::xlab("Longitude")+
