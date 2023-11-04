@@ -177,10 +177,13 @@ run_kmeans <- function(DB,k){
   DB <- DB %>% k_means_plot()
   # DB$other$main_plot
   # DB$other$main_plotly
-  DB$other$hist_of_eoi_to_pred_dist <- plotly_histogram(x = DB$data$coordinates_plot$eoi_to_pred_min_distance_km[which(DB$data$coordinates_plot$group=="Event")])
   if(!is.null(DB$data$eoi_to_int_min_min_distance_km)){
-    DB$other$hist_of_eoi_to_int_dist <-  plotly_histogram(x = DB$data$coordinates_plot$eoi_to_int_min_distance_km[which(DB$data$coordinates_plot$group=="Event")])
+    range <- c(DB$data$eoi_to_pred_max_min_distance_km,DB$data$eoi_to_int_max_min_distance_km) %>% max() %>%  km_to_mi()
+    DB$other$hist_of_eoi_to_pred_dist <- plotly_histogram(x = DB$data$coordinates_plot$eoi_to_pred_min_distance_km[which(DB$data$coordinates_plot$group=="Event")], range=range)
+    DB$other$hist_of_eoi_to_int_dist <-  plotly_histogram(x = DB$data$coordinates_plot$eoi_to_int_min_distance_km[which(DB$data$coordinates_plot$group=="Event")], range=range)
   }else{
+    range <- DB$data$eoi_to_pred_max_min_distance_km %>% km_to_mi()
+    DB$other$hist_of_eoi_to_pred_dist <- plotly_histogram(x = DB$data$coordinates_plot$eoi_to_pred_min_distance_km[which(DB$data$coordinates_plot$group=="Event")], range=range)
     DB$other$hist_of_eoi_to_int_dist <- NULL
   }
   DB

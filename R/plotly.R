@@ -128,7 +128,7 @@ plotify<-function(GG){
   PLOTLY
 }
 
-plotly_histogram <- function(x){
+plotly_histogram <- function(x,range){
   PLOTLY <- plotly::plot_ly(
     x = x,
     type = "histogram",
@@ -159,7 +159,8 @@ plotly_histogram <- function(x){
       xaxis = list(
         tickfont=list(
           size=10,
-          color="black"
+          color="black",
+          range=c(0,range)
         )
       ),
       yaxis = list(
@@ -177,3 +178,56 @@ plotly_histogram <- function(x){
     )
   PLOTLY
 }
+
+# plotly_histogram2 <- function(x,y){
+#   PLOTLY <- plotly::plot_ly(
+#     x = x,
+#     type = "histogram",
+#     hoverinfo="none",
+#     texttemplate = "%{y}"
+#   ) %>% plotly::add_histogram(
+#
+#   )
+#
+#   PLOTLY <-PLOTLY  %>%
+#     plotly::config(
+#       scrollZoom=F, displaylogo = F,
+#       modeBarButtonsToRemove = c(
+#         "zoom2d",
+#         "pan2d",
+#         "select2d",
+#         "lasso2d",
+#         # "zoomIn2d",
+#         # "zoomOut2d",
+#         "autoScale2d",
+#         # "resetScale2d",
+#         "hoverClosestCartesian",
+#         "hoverCompareCartesian"
+#       )
+#     )
+#   PLOTLY <- PLOTLY %>%
+#     plotly::layout(
+#       # hoverlabel = list(
+#       #   align = "left"
+#       # ),
+#       xaxis = list(
+#         tickfont=list(
+#           size=10,
+#           color="black"
+#         )
+#       ),
+#       yaxis = list(
+#         tickfont=list(
+#           size=10,
+#           color="black"
+#         )
+#       )
+#       # legend = list(
+#       #   itemsizing='constant',
+#       #   orientation = "h",
+#       #   x = -0.1,
+#       #   y=1.1
+#       # )
+#     )
+#   PLOTLY
+# }
