@@ -159,9 +159,10 @@ plotly_histogram <- function(x,range){
       xaxis = list(
         tickfont=list(
           size=10,
-          color="black",
-          range=c(0,range)
-        )
+          color="black"
+        ),
+        range=c(0,range),
+        title = lab
       ),
       yaxis = list(
         tickfont=list(
