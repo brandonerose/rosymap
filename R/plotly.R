@@ -17,16 +17,19 @@ plotly_bar<-function(df,x_col,y_col,name){
         font=list(
           size=12,
           color="black"
-        )),
+        )
+      ),
       tickfont=list(
         size=12,
         color="black"
-      )),
-    yaxis = list(title = '',
-                 tickfont=list(
-                   size=10,
-                   color="black"
-                 )
+      )
+    ),
+    yaxis = list(
+      title = '',
+      tickfont=list(
+        size=10,
+        color="black"
+      )
     ),
     barmode = 'stack',
     annotations = list(
@@ -39,57 +42,138 @@ plotly_bar<-function(df,x_col,y_col,name){
       showarrow = F,
       arrowhead = NULL,
       arrowsize = NULL,
-      font=list(size=12,
-                color="black"),
+      font=list(
+        size=12,
+        color="black"),
       textangle=0
     )
   ) %>%
-    plotly::config(scrollZoom=F, displaylogo = F,
-                   modeBarButtonsToRemove = c(
-                     "zoom2d",
-                     "pan2d",
-                     "select2d",
-                     "lasso2d",
-                     # "zoomIn2d",
-                     # "zoomOut2d",
-                     "autoScale2d",
-                     # "resetScale2d",
-                     "hoverclosest",
-                     "hoverCompareCartesian",
-                     "toggleHover"
-                   )) %>%
-    plotly::layout(showlegend = F,
-                   xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-                   yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = T)
+    plotly::config(
+      scrollZoom=F,
+      displaylogo = F,
+      modeBarButtonsToRemove = c(
+        "zoom2d",
+        "pan2d",
+        "select2d",
+        "lasso2d",
+        # "zoomIn2d",
+        # "zoomOut2d",
+        "autoScale2d",
+        # "resetScale2d",
+        "hoverclosest",
+        "hoverCompareCartesian",
+        "toggleHover"
+      )
+    ) %>%
+    plotly::layout(
+      showlegend = F,
+      xaxis = list(
+        showgrid = FALSE,
+        zeroline = FALSE,
+        showticklabels = FALSE
+      ),
+      yaxis = list(
+        showgrid = FALSE,
+        zeroline = FALSE,
+        showticklabels = T
+      )
     ) %>% plotly::style(hoverinfo = 'none')
   fig
 }
 
 plotify<-function(GG){
-  GG %>% plotly::ggplotly(tooltip = "text") %>%
-    plotly::config(scrollZoom=F, displaylogo = F,
-                   modeBarButtonsToRemove = c(
-                     "zoom2d",
-                     "pan2d",
-                     "select2d",
-                     "lasso2d",
-                     # "zoomIn2d",
-                     # "zoomOut2d",
-                     "autoScale2d",
-                     # "resetScale2d",
-                     "hoverClosestCartesian",
-                     "hoverCompareCartesian"
-                   )) %>%
-    plotly::layout(hoverlabel = list(align = "left"),
-                   xaxis = list(
-                     tickfont=list(
-                       size=10,
-                       color="black"
-                     )),
-                   yaxis = list(
-                     tickfont=list(
-                       size=10,
-                       color="black"
-                     ))
+  PLOTLY <-GG %>% plotly::ggplotly(
+    tooltip = "text",
+    hoverinfo="text"
+  ) %>%
+    plotly::config(
+      scrollZoom=F, displaylogo = F,
+      modeBarButtonsToRemove = c(
+        "zoom2d",
+        "pan2d",
+        "select2d",
+        "lasso2d",
+        # "zoomIn2d",
+        # "zoomOut2d",
+        "autoScale2d",
+        # "resetScale2d",
+        "hoverClosestCartesian",
+        "hoverCompareCartesian"
+      )
     )
+  PLOTLY <- PLOTLY %>%
+    plotly::layout(
+      hoverlabel = list(
+        align = "left"
+      ),
+      xaxis = list(
+        tickfont=list(
+          size=10,
+          color="black"
+        )
+      ),
+      yaxis = list(
+        tickfont=list(
+          size=10,
+          color="black"
+        )
+      ),
+      legend = list(
+        itemsizing='constant',
+        orientation = "h",
+        x = -0.1,
+        y=1.1
+      )
+    )
+  PLOTLY
+}
+
+plotly_histogram <- function(x){
+  PLOTLY <- plotly::plot_ly(
+    x = x,
+    type = "histogram",
+    hoverinfo="none",
+    texttemplate = "%{y}"
+  )
+  PLOTLY <-PLOTLY  %>%
+    plotly::config(
+      scrollZoom=F, displaylogo = F,
+      modeBarButtonsToRemove = c(
+        "zoom2d",
+        "pan2d",
+        "select2d",
+        "lasso2d",
+        # "zoomIn2d",
+        # "zoomOut2d",
+        "autoScale2d",
+        # "resetScale2d",
+        "hoverClosestCartesian",
+        "hoverCompareCartesian"
+      )
+    )
+  PLOTLY <- PLOTLY %>%
+    plotly::layout(
+      # hoverlabel = list(
+      #   align = "left"
+      # ),
+      xaxis = list(
+        tickfont=list(
+          size=10,
+          color="black"
+        )
+      ),
+      yaxis = list(
+        tickfont=list(
+          size=10,
+          color="black"
+        )
+      )
+      # legend = list(
+      #   itemsizing='constant',
+      #   orientation = "h",
+      #   x = -0.1,
+      #   y=1.1
+      # )
+    )
+  PLOTLY
 }

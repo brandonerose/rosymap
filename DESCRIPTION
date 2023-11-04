@@ -15,10 +15,12 @@ Imports:
     dplyr,
     DT,
     fresh,
+    geosphere,
     ggmap,
     ggplot2,
     golem,
     hoardr,
+    listviewer,
     magrittr,
     plotly,
     RColorBrewer,
@@ -26,6 +28,7 @@ Imports:
     shiny,
     shinydashboard,
     shinydashboardPlus,
+    spatstat.geom,
     stats,
     utils
 Config/testthat/edition: 3

@@ -16,9 +16,16 @@ dbSidebar<-function(){
         text="Upload",
         tabName = "upload",
         icon =shiny::icon("upload")
+      ),
+      menuItem(
+        text="Backend",
+        tabName = "backend",
+        icon =shiny::icon("gear")
       )
     ),
-    actionButton("use_sample_data", "Use Sample Data"),
+    actionButton("use_sample_data", "Use Sample DB"),
+    actionButton("use_directory_data", "Use Directory DB"),
+    # actionButton("use_environment_data", "Use Environment DB"),
     numericInput(
       inputId = "kclusters",
       label = "K clusters",
@@ -45,9 +52,11 @@ dbSidebar<-function(){
                 "toner-labels", "toner-lines", "toner-lite", "watercolor"),
       selected = "toner-hybrid"
     ),
-    actionButton("random_colors", "Random Colors"),
-    actionButton("default_colors", "Default Colors"),
+    actionButton("random_colors", "Random Colors/Shapes"),
+    # actionButton("random_shapes", "Random Colors"),
+    # actionButton("default_colors", "Default Colors"),
     actionButton("save_your_work", "Save Your Work!"),
+    # textOutput("testtext"),
     TCD_SBF()
   )
 }

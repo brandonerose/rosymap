@@ -114,6 +114,7 @@ make_table<-function(DF,selection="single"){
     selection = selection,
     editable = F,
     rownames = F,
+    extensions = 'Buttons',
     options = list(
       columnDefs = list(list(className = 'dt-center',targets = "_all")),
       paging = T,
@@ -124,8 +125,8 @@ make_table<-function(DF,selection="single"){
       scrollX = T,
       # autoWidth = T,
       searching = T,
-      # dom = 'Bfrtip',
-      # buttons = c('csv', 'excel',"pdf"),
+      dom = 'Bfrtip',
+      buttons = c("copy",'csv', 'excel',"pdf"),
       scrollCollapse = F,
       stateSave = F
     ),
@@ -133,4 +134,10 @@ make_table<-function(DF,selection="single"){
     filter = 'top',
     escape =F
   )
+}
+
+
+km_to_mi <- function(km) {
+  mi <- km * 0.621371
+  return(mi)
 }

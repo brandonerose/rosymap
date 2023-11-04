@@ -8,22 +8,69 @@ dbBody<-function(){
         "home",
         fluidRow(
           box(
-            title = h1("Main Map"),
-            width = 6,
+            title = h1("Rosymap Planning your Intervention"),
+            width = 12,
             # height = 600,
             plotly::plotlyOutput("main_plot",height = 500)
-          ),
+          )
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb9",width = 4),
+          shinydashboard::valueBoxOutput("vb10",width = 4),
+          shinydashboard::valueBoxOutput("vb11",width = 4)
+        ),
+        fluidRow(
           box(
-            title = h1("Comparison Map"),
+            title = h1("Events of Interest"),
             width = 6,
             # height = 600,
-            plotly::plotlyOutput("compare_plot",height = 500)
+            DT::DTOutput("eoi_table",height = 500)
+          ),
+          box(
+            title = h1("Interventions"),
+            width = 6,
+            # height = 600,
+            DT::DTOutput("int_table",height = 500)
+          )
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb1",width = 3),
+          shinydashboard::valueBoxOutput("vb4",width = 3),
+          shinydashboard::valueBoxOutput("vb5",width = 3),
+          shinydashboard::valueBoxOutput("vb8",width = 3)
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb2",width = 3),
+          shinydashboard::valueBoxOutput("vb3",width = 3),
+          shinydashboard::valueBoxOutput("vb6",width = 3),
+          shinydashboard::valueBoxOutput("vb7",width = 3)
+        ),
+        fluidRow(
+          box(
+            title = h1("Histogram of Distances Events of Interest Compared to Predicted Clusters"),
+            width = 6,
+            # height = 600,
+            plotly::plotlyOutput("hist_pred",height = 500)
+          ),
+          box(
+            title = h1("Histogram of Distances Events of Interest Compared to Interventions"),
+            width = 6,
+            # height = 600,
+            plotly::plotlyOutput("hist_int",height = 500)
+          )
+        ),
+        fluidRow(
+          box(
+            title = h1("Clusters (Predicted)"),
+            width = 12,
+            # height = 600,
+            DT::DTOutput("cluster_table",height = 500)
           )
         )
       ),
       tabItem(
         "upload",
-        h1("Method 1 (two different files)"),
+        h1("Upload your files here!"),
         fluidRow(
           box(
             title = h1("Upload Events of Interest"),
@@ -36,11 +83,10 @@ dbBody<-function(){
               accept = c(".csv",".xlsx")
             ),
             DT::DTOutput("eoi_upload_table"),
-            textInput("eoi_group_name","Group Name",placeholder = "what should events be called?"),
+            # textInput("eoi_group_name","Group Name",placeholder = "what should events be called?"),
             uiOutput("eoi_ui_lat"),
-            uiOutput("eoi_ui_lon"),
-            uiOutput("eoi_ui_group"),
-            actionButton("eoi_upload_save","Save")
+            uiOutput("eoi_ui_lon")
+            # uiOutput("eoi_ui_group"),
           ),
           box(
             title = h1("Upload Intervention (optional)"),
@@ -53,33 +99,28 @@ dbBody<-function(){
               accept = c(".csv",".xlsx")
             ),
             DT::DTOutput("int_upload_table"),
-            textInput("int_group_name","Group Name",placeholder = "what should events be called?"),
+            # textInput("int_group_name","Group Name",placeholder = "what should events be called?"),
             uiOutput("int_ui_lat"),
-            uiOutput("int_ui_lon"),
-            uiOutput("int_ui_group"),
-            actionButton("int_upload_save","Save")
-          )
-        ),
-        h1("Method 2 (one file)"),
-        fluidRow(
+            uiOutput("int_ui_lon")
+            # uiOutput("int_ui_group"),
+          ),
           box(
-            title = h1("Upload Events of Interest"),
+            title = h1("Click the Button Below to Save"),
             width = 12,
-            # height = 600,
-            fileInput(
-              "com_upload_file",
-              "Choose Data File",
-              multiple = F,
-              accept = c(".csv",".xlsx")
-            ),
-            DT::DTOutput("com_upload_table"),
-            uiOutput("com_ui_lat"),
-            uiOutput("com_ui_lon"),
-            uiOutput("com_ui_group"),
-            actionButton("com_upload_save","Save")
+            actionButton("upload_save","Save your above files!"),
+            p("After you click save you can return to the home tab.")
           )
         )
-        # dt_output('edit rows but disable certain columns (editable = list(target = "row", disable = list(columns = c(2, 4, 5))))', 'x10')
+       ),
+      tabItem(
+        "backend",
+        fluidRow(
+          box(
+            title = h1("Here is what the DB object looks like on the R 'backend'"),
+            width = 12,
+            listviewer::jsoneditOutput("listviewdb")
+          )
+        )
       )
     )
   )

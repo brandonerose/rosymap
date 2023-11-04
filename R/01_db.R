@@ -1,13 +1,3 @@
-blank_DB<-list(
-  title="rosymap",
-  project_name=NULL,
-  version=NULL,
-  last_data_update=NULL,
-  data=NULL,
-  map=NULL,
-  other=NULL
-)
-
 #' @title Validates DB
 #' @return Message
 #' @param DB DB from load_DB or update_DB
