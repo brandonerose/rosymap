@@ -15,11 +15,6 @@ dbBody<-function(){
           )
         ),
         fluidRow(
-          shinydashboard::valueBoxOutput("vb9",width = 4),
-          shinydashboard::valueBoxOutput("vb10",width = 4),
-          shinydashboard::valueBoxOutput("vb11",width = 4)
-        ),
-        fluidRow(
           box(
             title = h1("Events of Interest"),
             width = 6,
@@ -34,6 +29,9 @@ dbBody<-function(){
           )
         ),
         fluidRow(
+          shinydashboard::valueBoxOutput("vb9",width = 12)
+        ),
+        fluidRow(
           shinydashboard::valueBoxOutput("vb1",width = 3),
           shinydashboard::valueBoxOutput("vb4",width = 3),
           shinydashboard::valueBoxOutput("vb5",width = 3),
@@ -44,6 +42,10 @@ dbBody<-function(){
           shinydashboard::valueBoxOutput("vb3",width = 3),
           shinydashboard::valueBoxOutput("vb6",width = 3),
           shinydashboard::valueBoxOutput("vb7",width = 3)
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb10",width = 6),
+          shinydashboard::valueBoxOutput("vb11",width = 6)
         ),
         fluidRow(
           box(

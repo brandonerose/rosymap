@@ -274,23 +274,23 @@ app_server <- function(input, output, session) {
       value = (values$DB$data$coordinates_plot$group=="Event") %>% which() %>% length(),
       subtitle = "Events of Interest",
       # icon = ,
-      color = "green"
+      color = "orange"
     )
   })
   output$vb10 <- shinydashboard::renderValueBox({
+    shinydashboard::valueBox(
+      value = (values$DB$data$coordinates_plot$group=="K-Mean Center") %>% which() %>% length(),
+      subtitle = "Predicted Clusters",
+      # icon = ,
+      color = "green"
+    )
+  })
+  output$vb11 <- shinydashboard::renderValueBox({
     shinydashboard::valueBox(
       value = (values$DB$data$coordinates_plot$group=="Intervention") %>% which() %>% length(),
       subtitle = "Interventions",
       # icon = ,
       color = "light-blue"
-    )
-  })
-  output$vb11 <- shinydashboard::renderValueBox({
-    shinydashboard::valueBox(
-      value = (values$DB$data$coordinates_plot$group=="K-Mean Center") %>% which() %>% length(),
-      subtitle = "Predicted Clusters",
-      # icon = ,
-      color = "orange"
     )
   })
   #end-------
