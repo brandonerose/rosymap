@@ -128,7 +128,7 @@ plotify<-function(GG){
   PLOTLY
 }
 
-plotly_histogram <- function(x,range){
+plotly_histogram <- function(x,range,lab){
   PLOTLY <- plotly::plot_ly(
     x = x,
     type = "histogram",
