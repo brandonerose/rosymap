@@ -52,7 +52,7 @@ dbSidebar<-function(){
                 "toner-labels", "toner-lines", "toner-lite", "watercolor"),
       selected = "toner-hybrid"
     ),
-    actionButton("random_colors", "Random Colors"),
+    actionButton("random_colors", "Random Colors/Shapes"),
     # actionButton("random_shapes", "Random Colors"),
     # actionButton("default_colors", "Default Colors"),
     actionButton("save_your_work", "Save Your Work!"),
