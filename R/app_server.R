@@ -201,8 +201,7 @@ app_server <- function(input, output, session) {
   # })
   #listviewer -------
   output$listviewdb <- listviewer::renderJsonedit({
-    x<-values
-    listviewer::jsonedit(x)
+    listviewer::jsonedit(sample_DB)
   })
   #valueboxes-------
   output$vb1 <- shinydashboard::renderValueBox({
