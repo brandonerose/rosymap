@@ -54,20 +54,17 @@ app_server <- function(input, output, session) {
   values$upload_eoi<- NULL
   values$upload_int<- NULL
 
-
-  observeEvent(input$zoom,{
-    values$DB <- values$DB %>% make_map(zoom = input$zoom,maptype = input$maptype)
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters)
+  observeEvent( input$random_colors,ignoreInit = T,{
+    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
   })
-  observeEvent(input$maptype,{
-    values$DB <- values$DB %>% make_map(zoom = input$zoom,maptype = input$maptype)
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters)
+  observeEvent( input$zoom,ignoreInit = T,{
+    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
   })
-  observeEvent(input$kclusters,{
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters)
+  observeEvent( input$kclusters,ignoreInit = T,{
+    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
   })
-  observeEvent(input$random_colors,ignoreInit = T,{
-    values$DB <- values$DB %>% k_means_plot()
+  observeEvent( input$maptype,ignoreInit = T,{
+    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
   })
 
   #obserevent files -------
@@ -147,8 +144,7 @@ app_server <- function(input, output, session) {
     }
 
     values$DB$data$coordinates <- coordinates
-    values$DB <- values$DB %>% make_map(zoom = input$zoom)
-    values$DB <- values$DB %>% run_kmeans(input$kclusters)
+    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
     values$DB$project_name <-"test" # change to UI later or remove
   })
 
@@ -176,11 +172,11 @@ app_server <- function(input, output, session) {
     }
   })
 
-  observeEvent(input$use_sample_data,ignoreInit = T,{
-    values$DB <- sample_DB
+  observeEvent(input$use_sample_data,{
+    values$DB <- sample_DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
   })
   observeEvent(input$use_directory_data,ignoreInit = T,{
-    values$DB <- load_DB()
+    values$DB <- load_DB() %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
   })
   observeEvent(input$save_your_work,ignoreInit = T,{
     values$DB %>% save_DB()
@@ -189,12 +185,10 @@ app_server <- function(input, output, session) {
   output$main_plot <- plotly::renderPlotly({
     values$DB$other$main_plotly
   })
-  output$hist_pred <- plotly::renderPlotly({
-    values$DB$other$hist_of_eoi_to_pred_dist
+  output$hist <- plotly::renderPlotly({
+    values$DB$other$hist
   })
-  output$hist_int <- plotly::renderPlotly({
-    values$DB$other$hist_of_eoi_to_int_dist
-  })
+
   #testext=-------
   # output$testtext <- renderText({
   #   values$upload_int

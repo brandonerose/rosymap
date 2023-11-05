@@ -8,11 +8,36 @@ dbBody<-function(){
         "home",
         fluidRow(
           box(
-            title = h1("Rosymap Planning your Intervention"),
-            width = 12,
+            title = h1("RosyMap"),
+            width = 6,
             # height = 600,
             plotly::plotlyOutput("main_plot",height = 500)
+          ),
+          box(
+            title = h1("Histogram of Distances"),
+            width = 6,
+            # height = 600,
+            plotly::plotlyOutput("hist",height = 500)
           )
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb9",width = 12)
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb10",width = 6),
+          shinydashboard::valueBoxOutput("vb11",width = 6)
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb1",width = 3),
+          shinydashboard::valueBoxOutput("vb4",width = 3),
+          shinydashboard::valueBoxOutput("vb5",width = 3),
+          shinydashboard::valueBoxOutput("vb8",width = 3)
+        ),
+        fluidRow(
+          shinydashboard::valueBoxOutput("vb2",width = 3),
+          shinydashboard::valueBoxOutput("vb3",width = 3),
+          shinydashboard::valueBoxOutput("vb6",width = 3),
+          shinydashboard::valueBoxOutput("vb7",width = 3)
         ),
         fluidRow(
           box(
@@ -28,39 +53,7 @@ dbBody<-function(){
             DT::DTOutput("int_table",height = 500)
           )
         ),
-        fluidRow(
-          shinydashboard::valueBoxOutput("vb9",width = 12)
-        ),
-        fluidRow(
-          shinydashboard::valueBoxOutput("vb1",width = 3),
-          shinydashboard::valueBoxOutput("vb4",width = 3),
-          shinydashboard::valueBoxOutput("vb5",width = 3),
-          shinydashboard::valueBoxOutput("vb8",width = 3)
-        ),
-        fluidRow(
-          shinydashboard::valueBoxOutput("vb2",width = 3),
-          shinydashboard::valueBoxOutput("vb3",width = 3),
-          shinydashboard::valueBoxOutput("vb6",width = 3),
-          shinydashboard::valueBoxOutput("vb7",width = 3)
-        ),
-        fluidRow(
-          shinydashboard::valueBoxOutput("vb10",width = 6),
-          shinydashboard::valueBoxOutput("vb11",width = 6)
-        ),
-        fluidRow(
-          box(
-            title = h1("Histogram of Distances Events of Interest Compared to Predicted Clusters"),
-            width = 6,
-            # height = 600,
-            plotly::plotlyOutput("hist_pred",height = 500)
-          ),
-          box(
-            title = h1("Histogram of Distances Events of Interest Compared to Interventions"),
-            width = 6,
-            # height = 600,
-            plotly::plotlyOutput("hist_int",height = 500)
-          )
-        ),
+
         fluidRow(
           box(
             title = h1("Clusters (Predicted)"),

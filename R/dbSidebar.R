@@ -29,7 +29,7 @@ dbSidebar<-function(){
     numericInput(
       inputId = "kclusters",
       label = "K clusters",
-      value = 6,
+      value = 8,
       min = 1,
       max = 50,
       step = 1,
@@ -38,7 +38,7 @@ dbSidebar<-function(){
     numericInput(
       inputId = "zoom",
       label = "Map Zoom",
-      value = 10,
+      value = 9,
       min = 1,
       max = 20,
       step = 1,
@@ -47,10 +47,8 @@ dbSidebar<-function(){
     selectizeInput(
       "maptype",
       "Map Type",
-      choices=c("terrain", "terrain-background", "terrain-labels", "terrain-lines",
-                "toner", "toner-2010", "toner-2011", "toner-background", "toner-hybrid",
-                "toner-labels", "toner-lines", "toner-lite", "watercolor"),
-      selected = "toner-hybrid"
+      choices=c("osm","sat"),
+      selected = "osm"
     ),
     actionButton("random_colors", "Random Colors/Shapes"),
     # actionButton("random_shapes", "Random Colors"),

@@ -1,27 +1,5 @@
-
-make_map <- function(DB,f = 0.1,zoom = 11, maptype = "toner-hybrid"){
-  # options(repr.plot.width = 12, repr.plot.height = 8)
-  #add test
-  map <- try(ggmap::get_stamenmap(
-    ggmap::make_bbox(
-      lon = DB$data$coordinates$longitude,
-      lat = DB$data$coordinates$latitude,
-      f = f
-    ),
-    zoom = zoom,
-    maptype = maptype
-  ),
-  silent = F
-  )
-  if("ggmap"%in%class(map)){
-    DB$map <- map()
-  }
-  DB
-}
-
-run_kmeans <- function(DB,k){
+run_kmeans <- function(DB,k,maptype="osm",zoom = 9){
   if(is.null(DB$data$coordinates))stop("is.null(DB$data$coordinates)")
-  if(is.null(DB$map))stop("is.null(DB$map)")
   x <- DB$data$coordinates[which(DB$data$coordinates$group=="Event"),]
   rownames(x) <- NULL
 
@@ -174,22 +152,23 @@ run_kmeans <- function(DB,k){
   # DB$data$coordinates_plot %>% View()
   # DB$data$cluster_df <- DB$data$cluster_df %>% merge(DB$data$coordinates_plot[which(DB$data$coordinates_plot$group=="K-Mean Center"),],by=)
 
-  DB <- DB %>% k_means_plot()
+  DB <- DB %>% k_means_plot(maptype = maptype,zoom = zoom)
   # DB$other$main_plot
   # DB$other$main_plotly
-  if(!is.null(DB$data$eoi_to_int_min_min_distance_km)){
-    range <- c(DB$data$eoi_to_pred_max_min_distance_km,DB$data$eoi_to_int_max_min_distance_km)%>%  km_to_mi()%>% max()
-    DB$other$hist_of_eoi_to_pred_dist <- plotly_histogram(x = DB$data$coordinates_plot$eoi_to_pred_min_distance_km[which(DB$data$coordinates_plot$group=="Event")]%>% km_to_mi(), range=range,lab="Miles")
-    DB$other$hist_of_eoi_to_int_dist <-  plotly_histogram(x = DB$data$coordinates_plot$eoi_to_int_min_distance_km[which(DB$data$coordinates_plot$group=="Event")]%>% km_to_mi(), range=range,lab="Miles")
-  }else{
-    range <- DB$data$eoi_to_pred_max_min_distance_km %>% km_to_mi()
-    DB$other$hist_of_eoi_to_pred_dist <- plotly_histogram(x = DB$data$coordinates_plot$eoi_to_pred_min_distance_km[which(DB$data$coordinates_plot$group=="Event")], range=range)
-    DB$other$hist_of_eoi_to_int_dist <- NULL
-  }
+  # if(!is.null(DB$data$eoi_to_int_min_min_distance_km)){
+  #   range <- c(DB$data$eoi_to_pred_max_min_distance_km,DB$data$eoi_to_int_max_min_distance_km)%>%  km_to_mi()%>% max()
+  #   DB$other$hist_of_eoi_to_pred_dist <- plotly_histogram(x = DB$data$coordinates_plot$eoi_to_pred_min_distance_km[which(DB$data$coordinates_plot$group=="Event")]%>% km_to_mi(), range=range,lab="Miles")
+  #   DB$other$hist_of_eoi_to_int_dist <-  plotly_histogram(x = DB$data$coordinates_plot$eoi_to_int_min_distance_km[which(DB$data$coordinates_plot$group=="Event")]%>% km_to_mi(), range=range,lab="Miles")
+  # }else{
+  #   range <- DB$data$eoi_to_pred_max_min_distance_km %>% km_to_mi()
+  #   DB$other$hist_of_eoi_to_pred_dist <- plotly_histogram(x = DB$data$coordinates_plot$eoi_to_pred_min_distance_km[which(DB$data$coordinates_plot$group=="Event")], range=range)
+  #   DB$other$hist_of_eoi_to_int_dist <- NULL
+  # }
+  DB$other$hist<-plotly_histogram2(DB)
   DB
 }
 
-k_means_plot <- function(DB){
+k_means_plot <- function(DB,maptype="osm",zoom = 9){
   if(is.null(DB$data$coordinates_plot))stop("is.null(DB$data$coordinates_plot)")
   DB$data$coordinates_plot$color_groups <- 1:nrow(DB$data$coordinates_plot) %>% sapply(function(ROW){
     if(DB$data$coordinates_plot$group[ROW]=="Intervention"){
@@ -227,7 +206,14 @@ k_means_plot <- function(DB){
     "Purples",
     "Reds"
   )
-  if((length(seq_pals)-1)>n_clusters){
+  # groups <- unique(DB$data$coordinates_plot$group)
+  # groups <- data.frame(
+  #   group = groups,
+  #   symbol = get_plotly_shapes(size = length(groups),return = "name") %>% as.character()
+  # )
+  # DB$data$coordinates_plot$symbol <- DB$data$coordinates_plot$group %>% sapply(function(group){groups$symbol[groups$group==group]})
+  DB$data$coordinates_plot$symbol <- "circle"
+    if((length(seq_pals)-1)>n_clusters){
     cluster_pals <- seq_pals %>% sample(n_clusters+1)
   }else{
     cluster_pals <- seq_pals %>% sample(n_clusters+1,replace = T)
@@ -249,30 +235,8 @@ k_means_plot <- function(DB){
   #   DB$other$main_plot <-  DB$other$main_plot +
   #     ggplot2::scale_color_brewer(palette = palette)
   # }
-  x<-DB$data$coordinates_plot
-  DB$other$main_plot <- ggmap::ggmap(DB$map) +
-    ggplot2::geom_point(#events
-      data = DB$data$coordinates_plot,
-      ggplot2::aes(
-        x = longitude,
-        y = latitude,
-        shape = group,
-        size = size,
-        color = color,
-        text=label
-      ),
-      alpha = 1
-    )+
-    ggplot2::scale_shape_manual(
-      name = "Group",
-      # labels = c("Event", "Intervention","K-Mean Center"),
-      values = c(15:18) %>% sample(3)
-    ) +
-    ggplot2::guides(color = FALSE, linetype = FALSE,size= FALSE) +
-    ggplot2::xlab("Longitude")+
-    ggplot2::ylab("Latitude")
-  DB$other$main_plotly<-DB$other$main_plot %>% plotify()
-  # DB$other$main_plot
+  DB$data$coordinates_plot$symbol %>% unique()
+  DB$other$main_plotly<-DB %>% plotly_map(maptype=maptype,zoom=zoom)
   DB$other$main_plotly
   DB
 }
