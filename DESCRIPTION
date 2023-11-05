@@ -1,6 +1,6 @@
 Package: rosymap
 Title: rosymap
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: 
     person("Brandon", "Rose", , "thecodingdocs@gmail.com", role = c("cre", "aut"))
 Description: R Shiny package for using coordinates to plan effective
@@ -16,8 +16,6 @@ Imports:
     DT,
     fresh,
     geosphere,
-    ggmap,
-    ggplot2,
     golem,
     hoardr,
     listviewer,

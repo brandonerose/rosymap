@@ -1,3 +1,5 @@
+# rosymap 1.1.0
+
 # rosymap 1.0.0
 
 # PSDB (development version)
