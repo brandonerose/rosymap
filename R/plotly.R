@@ -290,7 +290,7 @@ get_plotly_shapes <- function(type="main",size = 1,return = "id"){
   set %>% sample(size = size,replace = replace) %>% return()
 }
 
-plotly_map <- function(DB,maptype="osm",zoom = 9){
+plotly_map <- function(DB,maptype=mapstyles[2],zoom = 9){
   data<-DB$data$coordinates_plot
   fig <- plotly::plot_ly(
     data = data,
@@ -311,9 +311,9 @@ plotly_map <- function(DB,maptype="osm",zoom = 9){
   )
   fig <- fig %>% plotly::layout(
     mapbox = mapbox_base(
-      type = maptype,
-      center = get_DB_center_mapbox(DB),
-      zoom=zoom
+      style = maptype,
+      zoom=zoom,
+      center = get_DB_center_mapbox(DB)
     ),
     legend = list(
       orientation = "h",
@@ -351,18 +351,17 @@ get_DB_center_mapbox <- function(DB){
   return(list(lon = lonmid, lat = latmid))
 }
 
-mapbox_base <- function(type,center,zoom = 9){
+mapbox_base <- function(style,center,zoom = 9){
+  if(!style %in% mapstyles)stop("`style` must be one of `mapstyles`")
   mapbox <- NULL
-  if(type == "osm"){
+  mapbox <- list(
+    style = style,
+    zoom = zoom,
+    center = center
+  )
+  if(style == "satellite"){
     mapbox <- list(
-      style = 'open-street-map',
-      zoom = zoom,
-      center = center
-    )
-  }
-  if(type == "sat"){
-    mapbox <- list(
-      style = "white-bg",
+      style = mapstyles[2],
       zoom = zoom,
       center = center,
       layers = list(

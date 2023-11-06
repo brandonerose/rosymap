@@ -47,8 +47,8 @@ dbSidebar<-function(){
     selectizeInput(
       "maptype",
       "Map Type",
-      choices=c("osm","sat"),
-      selected = "osm"
+      choices=mapstyles,
+      selected = mapstyles[2]
     ),
     actionButton("random_colors", "Random Colors/Shapes"),
     # actionButton("random_shapes", "Random Colors"),
