@@ -1,4 +1,4 @@
-run_kmeans <- function(DB,k,maptype=mapstyles[2],zoom = 9){
+run_kmeans <- function(DB,k,maptype=mapstyles[1],zoom = 9){
   if(is.null(DB$data$coordinates))stop("is.null(DB$data$coordinates)")
   x <- DB$data$coordinates[which(DB$data$coordinates$group=="Event"),]
   rownames(x) <- NULL
@@ -168,7 +168,7 @@ run_kmeans <- function(DB,k,maptype=mapstyles[2],zoom = 9){
   DB
 }
 
-k_means_plot <- function(DB,maptype=mapstyles[2],zoom = 9){
+k_means_plot <- function(DB,maptype=mapstyles[1],zoom = 9){
   if(is.null(DB$data$coordinates_plot))stop("is.null(DB$data$coordinates_plot)")
   DB$data$coordinates_plot$color_groups <- 1:nrow(DB$data$coordinates_plot) %>% sapply(function(ROW){
     if(DB$data$coordinates_plot$group[ROW]=="Intervention"){

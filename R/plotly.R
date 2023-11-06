@@ -290,7 +290,7 @@ get_plotly_shapes <- function(type="main",size = 1,return = "id"){
   set %>% sample(size = size,replace = replace) %>% return()
 }
 
-plotly_map <- function(DB,maptype=mapstyles[2],zoom = 9){
+plotly_map <- function(DB,maptype=mapstyles[1],zoom = 9){
   data<-DB$data$coordinates_plot
   fig <- plotly::plot_ly(
     data = data,
@@ -361,7 +361,7 @@ mapbox_base <- function(style,center,zoom = 9){
   )
   if(style == "satellite"){
     mapbox <- list(
-      style = mapstyles[2],
+      style = mapstyles[1],
       zoom = zoom,
       center = center,
       layers = list(

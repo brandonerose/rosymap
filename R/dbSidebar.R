@@ -48,7 +48,7 @@ dbSidebar<-function(){
       "maptype",
       "Map Type",
       choices=mapstyles,
-      selected = mapstyles[2]
+      selected = mapstyles[1]
     ),
     actionButton("random_colors", "Random Colors/Shapes"),
     # actionButton("random_shapes", "Random Colors"),
