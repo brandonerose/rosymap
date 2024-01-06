@@ -292,6 +292,13 @@ get_plotly_shapes <- function(type="main",size = 1,return = "id"){
 
 plotly_map <- function(DB,maptype=mapstyles[1],zoom = 9){
   data<-DB$data$coordinates_plot
+  input_min = data$size %>% min()
+  input_max = data$size %>% max()
+  output_min = 8
+  output_max = 26
+  data$size_scaled <- ((data$size - input_min) * (output_max - output_min)) / (input_max - input_min) + output_min
+
+  # data$size <- data$size
   fig <- plotly::plot_ly(
     data = data,
     name= ~group,
@@ -299,20 +306,19 @@ plotly_map <- function(DB,maptype=mapstyles[1],zoom = 9){
     lon = ~longitude,
     mode= "markers",
     marker = list(
-      color = ~color
+      color = ~color,
+      size = ~size_scaled #~size
     ),
     symbol = ~symbol,
     type = 'scattermapbox',
     text = ~label,
     hoverinfo = "text",
-    hoverlabel=list(
-      align = "left"
-    )
+    hoverlabel=list(align = "left")
   )
   fig <- fig %>% plotly::layout(
     mapbox = mapbox_base(
       style = maptype,
-      zoom=zoom,
+      zoom = zoom,
       center = get_DB_center_mapbox(DB)
     ),
     legend = list(

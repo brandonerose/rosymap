@@ -10,14 +10,14 @@ dbBody<-function(){
           box(
             title = h1("RosyMap"),
             width = 6,
-            # height = 600,
-            plotly::plotlyOutput("main_plot",height = 500)
+            height = 1000,
+            plotly::plotlyOutput("main_plot",height = 900)
           ),
           box(
             title = h1("Histogram of Distances"),
             width = 6,
-            # height = 600,
-            plotly::plotlyOutput("hist",height = 500)
+            height = 1000,
+            plotly::plotlyOutput("hist",height = 900)
           )
         ),
         fluidRow(

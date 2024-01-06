@@ -188,7 +188,6 @@ app_server <- function(input, output, session) {
   output$hist <- plotly::renderPlotly({
     values$DB$other$hist
   })
-
   #testext=-------
   # output$testtext <- renderText({
   #   values$upload_int
