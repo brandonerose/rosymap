@@ -53,6 +53,7 @@ dbSidebar<-function(){
     actionButton("random_colors", "Random Colors/Shapes"),
     # actionButton("random_shapes", "Random Colors"),
     # actionButton("default_colors", "Default Colors"),
+    actionButton("run_all_kmeans", "Run Kmeans All!"),
     actionButton("save_your_work", "Save Your Work!"),
     # textOutput("testtext"),
     TCD_SBF()

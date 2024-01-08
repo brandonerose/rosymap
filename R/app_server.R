@@ -172,11 +172,17 @@ app_server <- function(input, output, session) {
     }
   })
 
+  #actionbuttons ---------
+
   observeEvent(input$use_sample_data,{
     values$DB <- sample_DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
   })
   observeEvent(input$use_directory_data,ignoreInit = T,{
     values$DB <- load_DB() %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
+  })
+  observeEvent(input$run_all_kmeans,ignoreInit = T,{
+    values$DB <- values$DB %>% DB_run_all_kmeans() %>% DB_plot_all_kmeans()
+    # print("ran it")
   })
   observeEvent(input$save_your_work,ignoreInit = T,{
     values$DB %>% save_DB()
@@ -187,6 +193,9 @@ app_server <- function(input, output, session) {
   })
   output$hist <- plotly::renderPlotly({
     values$DB$other$hist
+  })
+  output$all_kmeans_plot <- renderPlot({
+    values$DB$other$all_kmeans_plot
   })
   #testext=-------
   # output$testtext <- renderText({

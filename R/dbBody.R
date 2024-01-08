@@ -61,6 +61,14 @@ dbBody<-function(){
             # height = 600,
             DT::DTOutput("cluster_table",height = 500)
           )
+        ),
+        fluidRow(
+          box(
+            title = h1("All K Means"),
+            width = 12,
+            # height = 600,
+            plotOutput("all_kmeans_plot",height = 900)
+          )
         )
       ),
       tabItem(
