@@ -54,6 +54,21 @@ save_DB<-function(DB){
   project_name<-DB$project_name
   save(project_name,file=file.path(get_dir(),"R_objects",".project_name.rdata"))
   save(DB,file=file.path(get_dir(),"R_objects","DB.rdata"))
+  for(x in names(DB$data)){
+    y<- DB$data[[x]]
+    if(is.data.frame(y)){
+      y %>% rio::export(paste0(get_dir(),"/output/",x,".xlsx"))
+    }
+  }
+  for(x in names(DB$other)){
+    plot<- DB$other[[x]]
+    if("ggplot"%in%class(plot)){
+      ggsave(paste0(get_dir(),"/output/",x,".png"),plot=plot,height = 4,width = 5,units = "in")
+    }
+    # if(is.data.frame(y)){
+    #   y %>% rio::export(paste0(get_dir(),"/output/",x,".xlsx"))
+    # }
+  }
   # save_xls_wrapper(DB)
   message("Saved!")
 }
