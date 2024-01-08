@@ -13,42 +13,96 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r setup, include=T,echo=F}
+knitr::opts_chunk$set(echo = TRUE)
+klippy::klippy()
+```
+
 # rosymap <img src="man/figures/logo.png" align="right" height="200" />
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-Use latitudes and longitudes to make maps.
+The code below will walk you through how to use the rosymap R package. The github page for rosymap is [github.com/brandonerose/rosymap](https://github.com/brandonerose/rosymap "github.com/brandonerose/rosymap")
 
-## Installation
+## Step 1: Install and Load the rosymap package!
 
-You can install the development version of rosymap like so:
+You can install the development version of rosymap by running the code below. Eventually code will be hosted on CRAN and installation will be not involve remotes.
 
-``` r
+```{r example1, eval=FALSE}
 # install remotes package if you don't have it
-# install.packages("remotes") 
-remotes::install_github("brandonerose/rosymap")
+install.packages("remotes") 
 
+remotes::install_github("brandonerose/rosymap") # installs package from github
+
+library("rosymap") # load the library of functions
 ```
 
-If you have any issues above download the most recent version of R at RStudtio and update all packages in RStudio. See [thecodingdocs.com/r/getting-started](https://www.thecodingdocs.com/r/getting-started "R Getting Started").
+## Step 2: Set your file directory
 
-## Run
+Example files are provided in the app. When you run set_dir, example files are copied to that file location. You can also modify the sample excel files that were copied into the directory on your PC that was created when you ran `set_dir()` below. 
 
-This is how you get REDCap turned into an R database - only for basic projects at this time
-
-```{r example, eval=FALSE}
-library("rosymap")
-getwd() # make sure you have an R project set up and that you are okay with files being stored here (be careful with cloud drives)
-set_dir(file.path(getwd()),F) # replace file.path with wherever you want files from this app to be stored...
-run_app() #it's that easy! problems check the documentation and/or email thecodingdocs@gmail.com
+```{r example2, eval=FALSE}
+your_path <- getwd() # make sure you have an R project set up and that you are okay with files being stored here (be careful with cloud drives)
+set_dir(file.path(your_path),F) # replace file.path with wherever you want files from this app to be stored... and a group of files will be dropped on your computer.
+#this is also where other input files could be read.
 ```
+
+## Step 3: Prepare your location data!
+
+Rosymap uses latitudes and longitudes for geographical data points. Another R package entitled [tidygeocoder](https://jessecambon.github.io/tidygeocoder/ "jessecambon.github.io/tidygeocoder/") can convert addresses to latitude and longitude if necessary. The quality of latitude and longitude data will depend on the condition of the input data, as incorrect or incomplete addresses will not be converted. To install [tidygeocoder](https://jessecambon.github.io/tidygeocoder/ "jessecambon.github.io/tidygeocoder/"), run the following code:
+
+```{r example3, eval=FALSE}
+# install tidygeocoder package if you don't have it
+install.packages("tidygeocoder") 
+library("tidygeocoder")
+
+# create a dataframe with addresses, but use your own addresses
+some_addresses <- data.frame(
+  name=c("White House","Transamerica Pyramid","Willis Tower"),
+  addr= c("1600 Pennsylvania Ave NW, Washington, DC","600 Montgomery St, San Francisco, CA 94111", "233 S Wacker Dr, Chicago, IL 60606")
+)
+# geocode the addresses
+lat_longs <-geocode(some_addresses,addr, method = 'osm', lat = latitude , long = longitude)
+
+#save your example data to the input folder of your directory
+write.csv(
+  lat_longs,
+  file = file.path(rosymap::get_dir(),"input","sample_tidy_geocoder_data.csv"),
+  row.names = F
+)
+```
+
+## Step 3: Run the app
+
+As long as you have the rosymap R package installed as above, and the library loaded, a local web application will launch when you run the function "run_app" 
+
+```{r example3, eval=FALSE}
+run_app()
+```
+
+## Step 4: Explore the Sample Data
+
+The home page of the application initially loads with sample “Events of Interest” and sample “Interventions” to learn the functionality of the application. To return to this sample database (DB) at any point, select “Use Sample DB” in the left-hand column. 
+
+The GIS map visualizes “Events of Interest”, “Interventions,” and the centroid (the center of each cluster) of k-means (groupings of similar clusters based on distance) for the applied dataset. These individual data groups can be switched on and off by selecting the respective map legend titles. Hovering over each data point on the map will outline the location and cluster information for that point. The top right of the map legend has a zoom +/- feature, an option to download a PNG of the map, and an option to reset the map view. The left-hand column of the application offers ways to manipulate data and the base map. The number of k-mean centroids can be selected. The baseline map can be adjusted by selecting the desired “Map Type” design. The map legend will shuffle by selecting “Random Colors/Shapes”. 
+
+The histogram to the right displays the “Event to Cluster” distance and, if an “Intervention” data set is uploaded, as it is in the sample data set, an “Event to Intervention” distance. Below the map and histogram, basic geographical data are outlined. The histogram and these data are updated whenever the k-means is adjusted. The left displays “Events of Interest” to the predicted cluster centroid minimum, maximum, mean, and median distance. The right displays the “Events of Interest” to the “Intervention” minimum, maximum, mean, and median distance. This comparison allows the user to compare the suggested intervention locations (k-means) and the provided intervention locations. The raw data (Events of Interest, Interventions, and Predicted Clusters) are visualized below the summary data with options to copy or download the files.
+
+## Step 5: Upload your data
+
+On the Upload tab of the app, you will add at least one excel file or CSV that contains your latitudes and longitude. This would be for your events of interest (left panel). Optionally, you can upload latitudes and longitudes from planned or past interventions (right panel). You have the option of choosing the names of the columns, however, the default is "Latitude" and "Longitude". You also have the option of choosing the name of the column that contains groups if your data has different events. After uploading your data, click save at the bottom of the upload panel and navigate back to the home page to see your maps. 
+
+## Step 6: Save your outputs
+
+Save your database to your local computer by selecting “Save”, then travel back to the main page to visualize your geospatial data. This will also export excel sheets to the output folder of your directory.
 
 ## Links
 
-The rosymap package is at [github.com/brandonerose/rosymap](https://github.com/brandonerose/rosymap "rosymap R package")
-See instructions above. Install remotes and install rosymap
+The current version of rosymap R package is at  [github.com/brandonerose/rosymap](https://github.com/brandonerose/rosymap "rosymap R package")
+
+Additional instructions and related content will be posted at [thecodingdocs.com/r/rosymap](https://www.thecodingdocs.com/r/rosymap "thecodingdocs.com/r/rosymap")
 
 Donate if I helped you out and want more development (anything helps)! [account.venmo.com/u/brandonerose](https://account.venmo.com/u/brandonerose "Venmo Donation")
 
