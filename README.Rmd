@@ -13,11 +13,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, include=T,echo=F}
-knitr::opts_chunk$set(echo = TRUE)
-klippy::klippy()
-```
-
 # rosymap <img src="man/figures/logo.png" align="right" height="200" />
 
 <!-- badges: start -->
@@ -74,27 +69,28 @@ write.csv(
 )
 ```
 
-## Step 3: Run the app
+## Step 4: Run the app
 
 As long as you have the rosymap R package installed as above, and the library loaded, a local web application will launch when you run the function "run_app" 
 
-```{r example3, eval=FALSE}
+```{r example4, eval=FALSE}
 run_app()
 ```
 
-## Step 4: Explore the Sample Data
+## Step 5: Explore the Sample Data
 
 The home page of the application initially loads with sample “Events of Interest” and sample “Interventions” to learn the functionality of the application. To return to this sample database (DB) at any point, select “Use Sample DB” in the left-hand column. 
 
 The GIS map visualizes “Events of Interest”, “Interventions,” and the centroid (the center of each cluster) of k-means (groupings of similar clusters based on distance) for the applied dataset. These individual data groups can be switched on and off by selecting the respective map legend titles. Hovering over each data point on the map will outline the location and cluster information for that point. The top right of the map legend has a zoom +/- feature, an option to download a PNG of the map, and an option to reset the map view. The left-hand column of the application offers ways to manipulate data and the base map. The number of k-mean centroids can be selected. The baseline map can be adjusted by selecting the desired “Map Type” design. The map legend will shuffle by selecting “Random Colors/Shapes”. 
 
 The histogram to the right displays the “Event to Cluster” distance and, if an “Intervention” data set is uploaded, as it is in the sample data set, an “Event to Intervention” distance. Below the map and histogram, basic geographical data are outlined. The histogram and these data are updated whenever the k-means is adjusted. The left displays “Events of Interest” to the predicted cluster centroid minimum, maximum, mean, and median distance. The right displays the “Events of Interest” to the “Intervention” minimum, maximum, mean, and median distance. This comparison allows the user to compare the suggested intervention locations (k-means) and the provided intervention locations. The raw data (Events of Interest, Interventions, and Predicted Clusters) are visualized below the summary data with options to copy or download the files.
+<!-- [![TheCodingDocs.com](TCD.png)](http://www.thecodingdocs.com) -->
 
-## Step 5: Upload your data
+## Step 6: Upload your data
 
 On the Upload tab of the app, you will add at least one excel file or CSV that contains your latitudes and longitude. This would be for your events of interest (left panel). Optionally, you can upload latitudes and longitudes from planned or past interventions (right panel). You have the option of choosing the names of the columns, however, the default is "Latitude" and "Longitude". You also have the option of choosing the name of the column that contains groups if your data has different events. After uploading your data, click save at the bottom of the upload panel and navigate back to the home page to see your maps. 
 
-## Step 6: Save your outputs
+## Step 7: Save your outputs
 
 Save your database to your local computer by selecting “Save”, then travel back to the main page to visualize your geospatial data. This will also export excel sheets to the output folder of your directory.
 
