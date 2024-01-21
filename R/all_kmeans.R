@@ -63,7 +63,6 @@ DB_run_all_kmeans <- function(DB){
       )
     )
   }
-  library(ggplot2)
   z<-19
   siz <- 2.5
   above_line <- 0.5
