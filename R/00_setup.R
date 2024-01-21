@@ -23,6 +23,7 @@ validate_dir <- function(dir_path,silent=T){
 
 #' @title set your  directory
 #' @param dir_path your absolute path to the  directory
+#' @param ask logical for whether or not to ask about overwrites
 #' @export
 set_dir <- function(dir_path,ask=T){
   #param check
@@ -58,6 +59,10 @@ set_dir <- function(dir_path,ask=T){
   }
   for(folder in c("R_objects","input","output")){
     dir.create(file.path(dir_path,folder),showWarnings = F)
+    if(folder == "input"){
+      sample_rosymap_events %>% rio::export(dir_path %>% file.path(folder,"sample_rosymap_events.xlsx"))
+      sample_rosymap_interventions %>% rio::export(dir_path %>% file.path(folder,"sample_rosymap_interventions.xlsx"))
+    }
   }
 
   validate_dir(dir_path,silent=F)

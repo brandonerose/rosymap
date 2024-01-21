@@ -4,7 +4,7 @@ run_kmeans <- function(DB,k){
   rownames(x) <- NULL
 
   x$id <- rownames(x) %>% as.integer()
-  DB$other$kmeans <- stats::kmeans(x=as.matrix(x %>% dplyr::select(latitude,longitude)), centers = k,iter.max = 30)
+  DB$other$kmeans <- stats::kmeans(x=as.matrix(x %>% dplyr::select('latitude','longitude')), centers = k,iter.max = 30)
   z<-DB$other$kmeans$centers %>% as.data.frame()
 
   DB$data$cluster_df <- NULL
@@ -249,25 +249,25 @@ k_means_plot <- function(
   DB
 }
 
-show_db_scan <- function(eps,minPts){
-  dbscan_result <- dbscan(coords_matrix, eps = eps, MinPts = minPts)
-
-  cluster_labels_dbscan <- dbscan_result$cluster
-
-  cluster_df <- data.frame(traumas, dbscan = factor(cluster_labels_dbscan))
-
-  # get a map of the area
-
-
-  # set the size of the plotting device to 800x800 pixels
-
-  # plot the map and the clusters
-  ggmap(map) +
-    # geom_point(data = cluster_df, aes(x = lon, y = lat, color = kmeans), size = 2, alpha = 1) +
-    # scale_color_discrete(name = "K-means")
-    geom_point(data = cluster_df, aes(x = lon, y = lat, color = dbscan), size = 2, alpha = 1) +
-    scale_color_discrete(name = "DBSCAN")
-}
+# show_db_scan <- function(eps,minPts){
+  # dbscan_result <- dbscan(coords_matrix, eps = eps, MinPts = minPts)
+  #
+  # cluster_labels_dbscan <- dbscan_result$cluster
+  #
+  # cluster_df <- data.frame(traumas, dbscan = factor(cluster_labels_dbscan))
+  #
+  # # get a map of the area
+  #
+  #
+  # # set the size of the plotting device to 800x800 pixels
+  #
+  # # plot the map and the clusters
+  # ggmap(map) +
+  #   # geom_point(data = cluster_df, aes(x = lon, y = lat, color = kmeans), size = 2, alpha = 1) +
+  #   # scale_color_discrete(name = "K-means")
+  #   geom_point(data = cluster_df, aes(x = lon, y = lat, color = dbscan), size = 2, alpha = 1) +
+  #   scale_color_discrete(name = "DBSCAN")
+# }
 
 
 

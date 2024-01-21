@@ -1,3 +1,4 @@
+#' @import ggplot2
 DB_run_all_kmeans <- function(DB){
   len <- (DB$data$coordinates$group=="Intervention") %>% which() %>% length()
   i <- 1
@@ -108,7 +109,9 @@ DB_plot_all_kmeans <- function(DB,show_smooth = F, show_intervention = F){
     theme_classic()+
     theme(
       legend.title=element_blank(),
-      legend.position = c(0.9, 0.9)
+      legend.position = c(0.9, 0.9),
+      axis.title.x = element_text(size = 24),
+      axis.title.y = element_text(size = 24)
     )
   DB$other$all_kmeans_plot <- all_kmeans_plot
   return(DB)

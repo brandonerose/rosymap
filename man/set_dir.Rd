@@ -8,6 +8,8 @@ set_dir(dir_path, ask = T)
 }
 \arguments{
 \item{dir_path}{your absolute path to the  directory}
+
+\item{ask}{logical for whether or not to ask about overwrites}
 }
 \description{
 set your  directory

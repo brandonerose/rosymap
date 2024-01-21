@@ -5,7 +5,7 @@ validate_DB<-function(DB){
   #param check
   if( ! is.list(DB)) stop("DB must be a list")
   #function
-  if( ! all(names(blank_DB)%in%names(DB))){
+  if( ! all(names(rosymap:::blank_DB)%in%names(DB))){
     stop("`DB` does not have the appropriate names. Did you use `load_DB()` to generate it?")
   }
   if((length(DB[["data"]])==0)>0){
@@ -57,6 +57,7 @@ save_DB<-function(DB){
   for(x in names(DB$data)){
     y<- DB$data[[x]]
     if(is.data.frame(y)){
+      print(x)
       y %>% rio::export(paste0(get_dir(),"/output/",x,".xlsx"))
     }
   }
