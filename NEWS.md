@@ -1,5 +1,3 @@
-# rosymap (development version)
+# rosymap 1.0.0
 
-# rosymap 1.1.0
-
-
+* dev version 
