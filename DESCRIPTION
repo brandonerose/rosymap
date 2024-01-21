@@ -15,6 +15,7 @@ Imports:
     dplyr,
     DT,
     geosphere,
+    ggplot2,
     golem,
     hoardr,
     listviewer,
