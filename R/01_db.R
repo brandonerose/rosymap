@@ -5,7 +5,7 @@ validate_DB<-function(DB){
   #param check
   if( ! is.list(DB)) stop("DB must be a list")
   #function
-  if( ! all(names(rosymap::blank_DB)%in%names(DB))){
+  if( ! all(names(blank_DB)%in%names(DB))){
     stop("`DB` does not have the appropriate names. Did you use `load_DB()` to generate it?")
   }
   if((length(DB[["data"]])==0)>0){
