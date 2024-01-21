@@ -1,4 +1,4 @@
-run_kmeans <- function(DB,k,maptype=mapstyles[1],zoom = 9){
+run_kmeans <- function(DB,k){
   if(is.null(DB$data$coordinates))stop("is.null(DB$data$coordinates)")
   x <- DB$data$coordinates[which(DB$data$coordinates$group=="Event"),]
   rownames(x) <- NULL
@@ -109,6 +109,7 @@ run_kmeans <- function(DB,k,maptype=mapstyles[1],zoom = 9){
     DB$data$coordinates_plot$group, ": ", DB$data$coordinates_plot$id,"<br>",
     "  Latitude: ", DB$data$coordinates_plot$latitude %>% round(3),"<br>",
     "  Longitude: ", DB$data$coordinates_plot$longitude %>% round(3),"<br>",
+    "  Size: ", DB$data$coordinates_plot$size,"<br>",
     ifelse(
       DB$data$coordinates_plot$group=="Intervention",
       "",
@@ -149,10 +150,7 @@ run_kmeans <- function(DB,k,maptype=mapstyles[1],zoom = 9){
     )
   )
 
-  # DB$data$coordinates_plot %>% View()
-  # DB$data$cluster_df <- DB$data$cluster_df %>% merge(DB$data$coordinates_plot[which(DB$data$coordinates_plot$group=="K-Mean Center"),],by=)
-
-  DB <- DB %>% k_means_plot(maptype = maptype,zoom = zoom)
+  DB <- DB %>% k_means_plot()
   # DB$other$main_plot
   # DB$other$main_plotly
   # if(!is.null(DB$data$eoi_to_int_min_min_distance_km)){
@@ -168,7 +166,19 @@ run_kmeans <- function(DB,k,maptype=mapstyles[1],zoom = 9){
   DB
 }
 
-k_means_plot <- function(DB,maptype=mapstyles[1],zoom = 9){
+k_means_plot <- function(
+    DB,
+    maptype = mapstyles[2],
+    zoom = 10,
+    event_color = "black",
+    intervention_color = "red",
+    center_color = "green",
+    color_events_scale = F,
+    output_min=10, output_max = 28, opacity = 1
+) {
+  # event_shape = "circle"
+  # intervention_shape = "circle"
+  # center_shape = "circle"
   if(is.null(DB$data$coordinates_plot))stop("is.null(DB$data$coordinates_plot)")
   DB$data$coordinates_plot$color_groups <- 1:nrow(DB$data$coordinates_plot) %>% sapply(function(ROW){
     if(DB$data$coordinates_plot$group[ROW]=="Intervention"){
@@ -186,57 +196,55 @@ k_means_plot <- function(DB,maptype=mapstyles[1],zoom = 9){
   cluster_numbers <- DB$data$coordinates_plot$cluster[grep("Center Cluster ",DB$data$coordinates_plot$color_groups)]
   cluster_groups <- unique(grep("Center Cluster ",DB$data$coordinates_plot$color_groups,value = T))
   n_clusters <- length(cluster_groups)
-  seq_pals <- c(
-    "BuGn",
-    "BuPu",
-    "GnBu",
-    "OrRd",
-    "PuBu",
-    # "PuBuGn",
-    "PuRd",
-    "RdPu",
-    "YlGn",
-    # "YlGnBu",
-    # "YlOrBr",
-    # "YlOrRd",
-    "Blues",
-    "Greens",
-    "Greys",
-    "Oranges",
-    "Purples",
-    "Reds"
-  )
+
   # groups <- unique(DB$data$coordinates_plot$group)
   # groups <- data.frame(
   #   group = groups,
   #   symbol = get_plotly_shapes(size = length(groups),return = "name") %>% as.character()
   # )
   # DB$data$coordinates_plot$symbol <- DB$data$coordinates_plot$group %>% sapply(function(group){groups$symbol[groups$group==group]})
-  DB$data$coordinates_plot$symbol <- "circle"
+  if(color_events_scale){
     if((length(seq_pals)-1)>n_clusters){
-    cluster_pals <- seq_pals %>% sample(n_clusters+1)
-  }else{
-    cluster_pals <- seq_pals %>% sample(n_clusters+1,replace = T)
+      cluster_pals <- seq_pals %>% sample(n_clusters+1)
+    }else{
+      cluster_pals <- seq_pals %>% sample(n_clusters+1,replace = T)
+    }
   }
+
   i <-1:nrow(DB$data$coordinates_plot) %>% sample(1)
   # RColorBrewer::brewer.pal(3,cluster_pals[DB$data$coordinates_plot$cluster[i]]) %>% scales::show_col()
   for (i in 1:nrow(DB$data$coordinates_plot)){
     if(DB$data$coordinates_plot$group[i]=="Event"){
-      DB$data$coordinates_plot$color[i]<-RColorBrewer::brewer.pal(3,cluster_pals[DB$data$coordinates_plot$cluster[i]])[2]
+      # DB$data$coordinates_plot$symbol[i] <- event_shape
+      if(color_events_scale){
+        DB$data$coordinates_plot$color[i]<-RColorBrewer::brewer.pal(3,cluster_pals[DB$data$coordinates_plot$cluster[i]])[2]
+      }else{
+        DB$data$coordinates_plot$color[i] <- event_color
+      }
     }
     if(DB$data$coordinates_plot$group[i]=="Intervention"){
-      DB$data$coordinates_plot$color[i]<-RColorBrewer::brewer.pal(3,cluster_pals[length(cluster_pals)])[3]
+      # DB$data$coordinates_plot$symbol[i] <- intervention_shape
+      if(color_events_scale){
+        DB$data$coordinates_plot$color[i]<-RColorBrewer::brewer.pal(3,cluster_pals[length(cluster_pals)])[3]
+      }else{
+        DB$data$coordinates_plot$color[i] <- intervention_color
+      }
     }
     if(DB$data$coordinates_plot$group[i]=="K-Mean Center"){
-      DB$data$coordinates_plot$color[i]<-RColorBrewer::brewer.pal(3,cluster_pals[DB$data$coordinates_plot$cluster[i]])[3]
+      # DB$data$coordinates_plot$symbol[i] <-center_shape
+      if(color_events_scale){
+        DB$data$coordinates_plot$color[i]<-RColorBrewer::brewer.pal(3,cluster_pals[DB$data$coordinates_plot$cluster[i]])[3]
+      }else{
+        DB$data$coordinates_plot$color[i] <- center_color
+      }
     }
   }
   # if(!is.null(palette)){
   #   DB$other$main_plot <-  DB$other$main_plot +
   #     ggplot2::scale_color_brewer(palette = palette)
   # }
-  DB$data$coordinates_plot$symbol %>% unique()
-  DB$other$main_plotly<-DB %>% plotly_map(maptype=maptype,zoom=zoom)
+  # DB$data$coordinates_plot$symbol <- "circle"
+  DB$other$main_plotly<-DB %>% plotly_map(maptype=maptype,zoom= zoom,output_min=output_min, output_max = output_max,opacity = opacity)
   DB$other$main_plotly
   DB
 }

@@ -290,27 +290,40 @@ get_plotly_shapes <- function(type="main",size = 1,return = "id"){
   set %>% sample(size = size,replace = replace) %>% return()
 }
 
-plotly_map <- function(DB,maptype=mapstyles[1],zoom = 9){
+plotly_map <- function(DB,maptype=mapstyles[2],zoom = 9,output_min=10, output_max = 28,opacity=1){
   data<-DB$data$coordinates_plot
-  input_min = data$size %>% min()
-  input_max = data$size %>% max()
-  output_min = 8
-  output_max = 26
-  data$size_scaled <- ((data$size - input_min) * (output_max - output_min)) / (input_max - input_min) + output_min
+  data$size_scaled <- NA
+  kmeans_rows <- which(data$group=="K-Mean Center")
+  int_rows <- which(data$group=="Intervention")
+  event_rows <- which(data$group=="Event")
+
+  input_min <- min(data$size[c(event_rows,int_rows)])
+  input_max <- max(data$size[kmeans_rows])
+  data$size_scaled[kmeans_rows] <- ((data$size[kmeans_rows] - input_min) * (output_max - output_min)) / (input_max - input_min) + output_min
+  input_min <- min(data$size[int_rows])
+  input_max <- max(data$size[int_rows])
+  data$size_scaled[int_rows] <- ((data$size[int_rows] - input_min) * (output_max - output_min)) / (input_max - input_min) + output_min
+  input_min <- min(data$size[event_rows])
+  input_max <- max(data$size[event_rows])
+  data$size_scaled[event_rows] <- ((data$size[event_rows] - input_min) * (output_max - output_min)) / (input_max - input_min) + output_min
+
+  data$size_scaled[which(is.na(data$size_scaled))] <- output_min
 
   # data$size <- data$size
   fig <- plotly::plot_ly(
     data = data,
+    type = 'scattermapbox',
     name= ~group,
     lat = ~latitude,
     lon = ~longitude,
     mode= "markers",
     marker = list(
       color = ~color,
-      size = ~size_scaled #~size
+      size = ~size_scaled,
+      opacity = opacity
+      # symbol = not supported fully with shapes
     ),
-    symbol = ~symbol,
-    type = 'scattermapbox',
+    opacity = opacity,
     text = ~label,
     hoverinfo = "text",
     hoverlabel=list(align = "left")
@@ -331,16 +344,16 @@ plotly_map <- function(DB,maptype=mapstyles[1],zoom = 9){
     scrollZoom=F,
     displaylogo = F,
     modeBarButtonsToRemove = c(
-      "zoom2d",
-      "pan2d",
-      "select2d",
-      "lasso2d",
+      # "zoom2d",
+      # "pan2d",
+      # "select2d",
+      # "lasso2d",
       # "zoomIn2d",
       # "zoomOut2d",
-      "autoScale2d",
+      # "autoScale2d",
       # "resetScale2d",
-      "hoverClosestCartesian",
-      "hoverCompareCartesian"
+      # "hoverClosestCartesian",
+      # "hoverCompareCartesian"
     )
   )
   fig
