@@ -41,6 +41,13 @@ app_server <- function(input, output, session) {
       choices = NULL
     )
   })
+  output$int_ui_size <- renderUI({
+    selectizeInput(
+      inputId = "int_ui_size_",
+      label = "Size Column (optional)",
+      choices = NULL
+    )
+  })
   # output$int_ui_group <- renderUI({
   #   selectizeInput(
   #     inputId = "int_ui_group_",
@@ -53,18 +60,36 @@ app_server <- function(input, output, session) {
   values$DB<- sample_DB
   values$upload_eoi<- NULL
   values$upload_int<- NULL
+  values$plot_params <- reactive({
+    list(
+      kclusters = input$kclusters,
+      maptype = input$maptype,
+      zoom = input$zoom,
+      event_color = input$event_color,
+      intervention_color = input$intervention_color,
+      center_color = input$center_color,
+      color_events_scale = input$color_events_scale,
+      output_min = input$output_min,
+      output_max = input$output_max,
+      opacity = input$opacity
+    )
+  })
 
-  observeEvent( input$random_colors,ignoreInit = T,{
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
-  })
-  observeEvent( input$zoom,ignoreInit = T,{
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
-  })
-  observeEvent( input$kclusters,ignoreInit = T,{
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
-  })
-  observeEvent( input$maptype,ignoreInit = T,{
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
+
+  observeEvent(values$plot_params(),{
+    values$DB <- values$DB %>% run_kmeans(k = values$plot_params()$kclusters)
+    values$DB <- values$DB %>% k_means_plot(
+      maptype = values$plot_params()$maptype,
+      zoom = values$plot_params()$zoom,
+      event_color = values$plot_params()$event_color,
+      intervention_color = values$plot_params()$intervention_color,
+      center_color = values$plot_params()$center_color,
+      color_events_scale = values$plot_params()$color_events_scale,
+      output_min = values$plot_params()$output_min,
+      output_max = values$plot_params()$output_max,
+      opacity = values$plot_params()$opacity
+    )
+    print("observed plot")
   })
 
   #obserevent files -------
@@ -95,20 +120,48 @@ app_server <- function(input, output, session) {
   observeEvent(input$int_upload_file,ignoreInit = T,{
     # values$DB <-
     req(input$int_upload_file)
+    # print(input$int_upload_file$datapath)
     values$upload_int <-rio::import(input$int_upload_file$datapath)
+    # values$upload_int <-get_dir() %>% file.path("input","Stop the Bleed Trainings_5.12.23.xlsx") %>%  rio::import()
     colnames(values$upload_int) <- colnames(values$upload_int) %>% tolower()
     cols <- values$upload_int%>% colnames() %>% as.character()
+    guess_lat <- NULL
+    if("latitude"%in%cols){
+      guess_lat <- "latitude"
+    }else{
+      if("lat"%in%cols){
+        guess_lat <- "lat"
+      }
+    }
+    guess_lon <- NULL
+    if("longitude"%in%cols){
+      guess_lon <- "longitude"
+    }else{
+      if("lon"%in%cols){
+        guess_lon <- "lon"
+      }
+    }
+    guess_size <- NULL
+    if("size"%in%cols){
+      guess_size <- "size"
+    }
     updateSelectizeInput(
       session,
       inputId ="int_ui_lat_",
       choices = cols,
-      selected =  ifelse("latitude"%in%cols,"latitude",ifelse("Latitude"%in%cols,"Latitude",ifelse("lat"%in%cols,"lat",ifelse("Lat"%in%cols,"Lat",NULL))))
+      selected =  guess_lat
     )
     updateSelectizeInput(
       session,
       inputId ="int_ui_lon_",
       choices = cols,
-      selected =  ifelse("longitude"%in%cols,"longitude",ifelse("Longitude"%in%cols,"Longitude",ifelse("lon"%in%cols,"lon",ifelse("Lon"%in%cols,"Lon",NULL))))
+      selected =  guess_lon
+    )
+    updateSelectizeInput(
+      session,
+      inputId ="int_ui_size_",
+      choices = cols,
+      selected =  guess_size
     )
   })
   #observevent save -----
@@ -139,12 +192,28 @@ app_server <- function(input, output, session) {
         coordinates2[[input$int_ui_lon_]] <- NULL
         coordinates2$longitude <- lon
       }
+      if(!is.null(input$int_ui_size_)){
+        size <- coordinates2[[input$int_ui_size_]]
+        coordinates2[[input$int_ui_size_]] <- NULL
+        coordinates2$size <- size
+      }
       coordinates2$group <- "Intervention"
       coordinates <- coordinates %>% dplyr::bind_rows(coordinates2)
     }
 
     values$DB$data$coordinates <- coordinates
-    values$DB <- values$DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
+    values$DB <- values$DB %>% run_kmeans(k = values$plot_params()$kclusters)
+    values$DB <-    values$DB %>% k_means_plot(
+      maptype = values$plot_params()$maptype,
+      zoom = values$plot_params()$zoom,
+      event_color = values$plot_params()$event_color,
+      intervention_color = values$plot_params()$intervention_color,
+      center_color = values$plot_params()$center_color,
+      color_events_scale = values$plot_params()$color_events_scale,
+      output_min = values$plot_params()$output_min,
+      output_max = values$plot_params()$output_max,
+      opacity = values$plot_params()$opacity
+    )
     values$DB$project_name <-"test" # change to UI later or remove
   })
 
@@ -175,13 +244,63 @@ app_server <- function(input, output, session) {
   #actionbuttons ---------
 
   observeEvent(input$use_sample_data,{
-    values$DB <- sample_DB %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
+    values$DB <- sample_DB
+    values$DB <- values$DB %>% run_kmeans(k = values$plot_params()$kclusters)
+    values$DB <- values$DB %>% k_means_plot(
+      maptype = values$plot_params()$maptype,
+      zoom = values$plot_params()$zoom,
+      event_color = values$plot_params()$event_color,
+      intervention_color = values$plot_params()$intervention_color,
+      center_color = values$plot_params()$center_color,
+      color_events_scale = values$plot_params()$color_events_scale,
+      output_min = values$plot_params()$output_min,
+      output_max = values$plot_params()$output_max,
+      opacity = values$plot_params()$opacity
+    )
   })
   observeEvent(input$use_directory_data,ignoreInit = T,{
-    values$DB <- load_DB() %>% run_kmeans(k = input$kclusters, maptype = input$maptype,zoom = input$zoom)
+    values$DB <- load_DB()
+    values$DB <- values$DB %>% run_kmeans(k = values$plot_params()$kclusters)
+    values$DB <- values$DB %>% k_means_plot(
+      maptype = values$plot_params()$maptype,
+      zoom = values$plot_params()$zoom,
+      event_color = values$plot_params()$event_color,
+      intervention_color = values$plot_params()$intervention_color,
+      center_color = values$plot_params()$center_color,
+      color_events_scale = values$plot_params()$color_events_scale,
+      output_min = values$plot_params()$output_min,
+      output_max = values$plot_params()$output_max,
+      opacity = values$plot_params()$opacity
+    )
+  })
+  observeEvent( input$rerun_kmeans,ignoreInit = T,{
+    values$DB <- values$DB %>% run_kmeans(k = values$plot_params()$kclusters)
+    values$DB <- values$DB %>% k_means_plot(
+      maptype = values$plot_params()$maptype,
+      zoom = values$plot_params()$zoom,
+      event_color = values$plot_params()$event_color,
+      intervention_color = values$plot_params()$intervention_color,
+      center_color = values$plot_params()$center_color,
+      color_events_scale = values$plot_params()$color_events_scale,
+      output_min = values$plot_params()$output_min,
+      output_max = values$plot_params()$output_max,
+      opacity = values$plot_params()$opacity
+    )
   })
   observeEvent(input$run_all_kmeans,ignoreInit = T,{
     values$DB <- values$DB %>% DB_run_all_kmeans() %>% DB_plot_all_kmeans()
+    values$DB <- values$DB %>% run_kmeans(k = values$plot_params()$kclusters)
+    values$DB <- values$DB %>% k_means_plot(
+      maptype = values$plot_params()$maptype,
+      zoom = values$plot_params()$zoom,
+      event_color = values$plot_params()$event_color,
+      intervention_color = values$plot_params()$intervention_color,
+      center_color = values$plot_params()$center_color,
+      color_events_scale = values$plot_params()$color_events_scale,
+      output_min = values$plot_params()$output_min,
+      output_max = values$plot_params()$output_max,
+      opacity = values$plot_params()$opacity
+    )
     # print("ran it")
   })
   observeEvent(input$save_your_work,ignoreInit = T,{
@@ -203,7 +322,7 @@ app_server <- function(input, output, session) {
   # })
   #listviewer -------
   output$listviewdb <- listviewer::renderJsonedit({
-    listviewer::jsonedit(sample_DB)
+    listviewer::jsonedit(values$DB)
   })
   #valueboxes-------
   output$vb1 <- shinydashboard::renderValueBox({
