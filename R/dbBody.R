@@ -10,13 +10,14 @@ dbBody<-function(){
           box(
             title = h1("RosyMap"),
             width = 6,
-            height = 1000,
+            height = 1200,
+
             plotly::plotlyOutput("main_plot",height = 900)
           ),
           box(
             title = h1("Histogram of Distances"),
             width = 6,
-            height = 1000,
+            height = 1200,
             plotly::plotlyOutput("hist",height = 900)
           )
         ),
@@ -104,8 +105,8 @@ dbBody<-function(){
             DT::DTOutput("int_upload_table"),
             # textInput("int_group_name","Group Name",placeholder = "what should events be called?"),
             uiOutput("int_ui_lat"),
-            uiOutput("int_ui_lon")
-            # uiOutput("int_ui_group"),
+            uiOutput("int_ui_lon"),
+            uiOutput("int_ui_size")
           ),
           box(
             title = h1("Click the Button Below to Save"),

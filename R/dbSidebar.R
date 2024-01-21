@@ -38,7 +38,7 @@ dbSidebar<-function(){
     numericInput(
       inputId = "zoom",
       label = "Map Zoom",
-      value = 9,
+      value = 10,
       min = 1,
       max = 20,
       step = 1,
@@ -48,9 +48,59 @@ dbSidebar<-function(){
       "maptype",
       "Map Type",
       choices=mapstyles,
-      selected = mapstyles[1]
+      selected = mapstyles[2]
     ),
-    actionButton("random_colors", "Random Colors/Shapes"),
+    selectizeInput(
+      "event_color",
+      "Event color",
+      choices=rosymap_colors,
+      selected = "black"
+    ),
+    selectizeInput(
+      "intervention_color",
+      "Intervention color",
+      choices=rosymap_colors,
+      selected = "red"
+    ),
+    selectizeInput(
+      "center_color",
+      "Center color",
+      choices=rosymap_colors,
+      selected = "green"
+    ),
+    checkboxInput(
+      inputId = "color_events_scale",
+      label = "Use color scale",
+      value = FALSE
+    ),
+    numericInput(
+      inputId = "output_min",
+      label = "Min Point Size",
+      value = 9,
+      min = 1,
+      max = 20,
+      step = 1,
+      width = NULL
+    ),
+    numericInput(
+      inputId = "output_max",
+      label = "Max Point Size",
+      value = 28,
+      min = 1,
+      max = 50,
+      step = 1,
+      width = NULL
+    ),
+    numericInput(
+      inputId = "opacity",
+      label = "Opacity",
+      value =1,
+      min = 0,
+      max = 1,
+      step = 0.05,
+      width = NULL
+    ),
+    actionButton("rerun_kmeans", "Rerun Kmeans"),
     # actionButton("random_shapes", "Random Colors"),
     # actionButton("default_colors", "Default Colors"),
     actionButton("run_all_kmeans", "Run Kmeans All!"),
