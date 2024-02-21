@@ -66,7 +66,7 @@ dbSidebar<-function(){
       "center_color",
       "Center color",
       choices=rosymap_colors,
-      selected = "green"
+      selected = "steelblue"
     ),
     checkboxInput(
       inputId = "color_events_scale",

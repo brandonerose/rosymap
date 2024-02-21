@@ -169,10 +169,10 @@ run_kmeans <- function(DB,k){
 k_means_plot <- function(
     DB,
     maptype = mapstyles[2],
-    zoom = 10,
+    zoom = 11,
     event_color = "black",
     intervention_color = "red",
-    center_color = "green",
+    center_color = "blue",
     color_events_scale = F,
     output_min=10, output_max = 28, opacity = 1
 ) {
